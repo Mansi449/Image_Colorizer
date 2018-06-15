@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
             String filePath;
             if(Build.VERSION.SDK_INT>=26){
                 final String[] split = uri.getPath().split(":");//split the path.
-                filePath = split[1];
+                filePath = "storage/emulated/0/"+split[1];
             }else{
                 filePath=PathUtil.getPath(this,uri);
             }
