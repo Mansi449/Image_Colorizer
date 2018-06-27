@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
         Button choose_img_from_gallery = findViewById(R.id.choose_img_from_gallery);
         Button take_a_new_image = findViewById(R.id.take_a_new_image);
         Button button_colorize = findViewById(R.id.buColorize);
+        selected_image = findViewById(R.id.selected_image);
+
+        selected_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
         choose_img_from_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        selected_image = findViewById(R.id.selected_image);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
