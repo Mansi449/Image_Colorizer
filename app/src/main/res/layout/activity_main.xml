@@ -1,54 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="mdg.com.imagecolorizer.MainActivity">
-
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context="mdg.com.imagecolorizer.MainActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/choose_img_from_gallery"
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Choose an image from gallery"
-            android:textSize="16sp"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="Sample Image: "
+            android:padding="10dp"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="20sp"
             />
 
-        <Button
-            android:id="@+id/take_a_new_image"
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Take a new image"
-            android:textSize="16sp"
-            />
 
         <ImageView
             android:contentDescription="@string/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:id="@+id/selected_image"
-            />
+            android:layout_weight="4"
+            android:src="@drawable/img"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="POP COLOR"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/choose_img_from_gallery"
+                android:layout_margin="10dp"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:text="Choose another image from gallery"
+                android:textSize="12sp"
+                />
+
+
+            <Button
+                android:id="@+id/take_a_new_image"
+                android:layout_margin="10dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Take a new image"
+                android:textSize="12sp"
+                />
+        </LinearLayout>
 
         <Button
             android:id="@+id/buColorize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
             android:text="COLORize the image"/>
-
 
     </LinearLayout>
 
-
-</ScrollView>
