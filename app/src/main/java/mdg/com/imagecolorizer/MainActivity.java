@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             String filePath;
             if(Build.VERSION.SDK_INT>=26){
                 final String[] split = uri.getPath().split(":");//split the path.
-                filePath = "storage/emulated/0/"+split[1];
+                filePath = "storage/emulated/0/"+split[0];
             }else{
                 filePath=PathUtil.getPath(this,uri);
             }
@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
                     originalfile
             );
 
+            Log.e("file name", originalfile.getName());
             MultipartBody.Part file=MultipartBody.Part.createFormData("photo",originalfile.getName(), filepart);
 
             String baseUrl="http://f38722c5.ngrok.io/";
@@ -172,13 +173,13 @@ public class MainActivity extends AppCompatActivity {
             Call<ResponseBody> call= apiInterface.uploadImage(file);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     try {
                         filename=response.body().string();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    String DownloadUrl="http://f38722c5.ngrok.io/colored/"+filename.toString();
+                    String DownloadUrl="http://f38722c5.ngrok.io/colored/"+ filename;
                     Toast.makeText(MainActivity.this,DownloadUrl,Toast.LENGTH_SHORT).show();
                     Picasso.get().load(DownloadUrl).into(selected_image);
                 }
@@ -193,4 +194,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 }
