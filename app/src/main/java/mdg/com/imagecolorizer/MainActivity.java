@@ -15,10 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.github.developer__.BeforeAfterSlider;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -43,12 +45,14 @@ public class MainActivity extends AppCompatActivity {
     Uri uri;
     private String filename;
     ImageView selected_image;
+    BeforeAfterSlider slider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        slider = findViewById(R.id.mySlider);
         Button choose_img_from_gallery = findViewById(R.id.choose_img_from_gallery);
         Button take_a_new_image = findViewById(R.id.take_a_new_image);
         Button button_colorize = findViewById(R.id.buColorize);
@@ -85,10 +89,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//        button_colorize.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                uploadImage();
+//            }
+//        });
         button_colorize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadImage();
+//                ViewGroup parent = (ViewGroup) selected_image.getParent();
+//                int index = parent.indexOfChild(selected_image);
+//                Log.e("index", Integer.toString(index));
+//                parent.removeView(selected_image);
+                selected_image.setVisibility(View.GONE);
+                slider.setBeforeImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1rujusZvgl7fmmewITPFoJfRhy_55dSr2Qd5-l02m2e-tGCREsg").setAfterImage("http://www.status77.in/wp-content/uploads/2015/08/Funny-whatsapp-dp-images-600x450.jpg");
+                slider.setVisibility(View.VISIBLE);
             }
         });
     }

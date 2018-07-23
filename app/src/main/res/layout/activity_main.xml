@@ -27,6 +27,14 @@
             android:layout_weight="4"
             android:src="@drawable/img"/>
 
+        <com.github.developer__.BeforeAfterSlider
+            android:id="@+id/mySlider"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:slider_thumb="@mipmap/white_circle"
+            android:visibility="gone"
+        />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
