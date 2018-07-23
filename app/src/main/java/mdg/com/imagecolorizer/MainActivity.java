@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("file name", originalfile.getName());
             MultipartBody.Part file=MultipartBody.Part.createFormData("photo",originalfile.getName(), filepart);
 
-            String baseUrl="http://f38722c5.ngrok.io/";
+            String baseUrl="http://ec2-52-71-24-249.compute-1.amazonaws.com/";
             Retrofit retrofit= new Retrofit.Builder().baseUrl(baseUrl).
                     addConverterFactory(GsonConverterFactory.create()).build();
 
@@ -195,9 +195,12 @@ public class MainActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    String DownloadUrl="http://f38722c5.ngrok.io/colored/"+ filename;
-                    Toast.makeText(MainActivity.this,DownloadUrl,Toast.LENGTH_SHORT).show();
-                    Picasso.get().load(DownloadUrl).into(selected_image);
+                    String beforeUrl="http://ec2-52-71-24-249.compute-1.amazonaws.com/original/"+ filename + ".jpg";
+                    String afterUrl="http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png";
+                    
+                    //No need for this now!
+                    //Toast.makeText(MainActivity.this,DownloadUrl,Toast.LENGTH_SHORT).show();
+                    //Picasso.get().load(DownloadUrl).into(selected_image);
                 }
 
                 @Override
