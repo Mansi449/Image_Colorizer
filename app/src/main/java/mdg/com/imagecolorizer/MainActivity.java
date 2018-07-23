@@ -15,13 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.github.developer__.BeforeAfterSlider;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -89,24 +87,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        button_colorize.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                uploadImage();
-//            }
-//        });
         button_colorize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ViewGroup parent = (ViewGroup) selected_image.getParent();
-//                int index = parent.indexOfChild(selected_image);
-//                Log.e("index", Integer.toString(index));
-//                parent.removeView(selected_image);
-                selected_image.setVisibility(View.GONE);
-                slider.setBeforeImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1rujusZvgl7fmmewITPFoJfRhy_55dSr2Qd5-l02m2e-tGCREsg").setAfterImage("http://www.status77.in/wp-content/uploads/2015/08/Funny-whatsapp-dp-images-600x450.jpg");
-                slider.setVisibility(View.VISIBLE);
+                uploadImage();
             }
         });
+
     }
 
     @Override
@@ -195,12 +182,10 @@ public class MainActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    String beforeUrl="http://ec2-52-71-24-249.compute-1.amazonaws.com/original/"+ filename + ".jpg";
-                    String afterUrl="http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png";
-                    
-                    //No need for this now!
-                    //Toast.makeText(MainActivity.this,DownloadUrl,Toast.LENGTH_SHORT).show();
-                    //Picasso.get().load(DownloadUrl).into(selected_image);
+                    String black_white="http://ec2-52-71-24-249.compute-1.amazonaws.com/original/"+ filename + ".jpg";
+                    String colored="http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png";
+                    setSlider(black_white, colored);
+
                 }
 
                 @Override
@@ -212,6 +197,14 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    public void setSlider(String blackWhite, String colored){
+        Log.e("b/w", blackWhite);
+        Log.e("col", colored);
+        slider.setBeforeImage(colored).setAfterImage(blackWhite);
+        selected_image.setVisibility(View.GONE);
+        slider.setVisibility(View.VISIBLE);
     }
 
 }
