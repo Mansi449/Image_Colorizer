@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
         storeUploadImage(bitmap);
 
-        String filePath = "/storage/emulated/0/ImgExp/upload.jpg";
+        String filePath = "/storage/emulated/0/Colorizer/upload.jpg";
 
         final File originalfile=new File(filePath);
         RequestBody filepart=RequestBody.create(
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
 
     private  File getOutputMediaFile(){
 
-        File mediaStorageDir = new File("/storage/emulated/0/ImgExp/");
+        File mediaStorageDir = new File("/storage/emulated/0/Colorizer/");
 
         if (! mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
 
     private  File getOutputDirectory(){
 
-        File mediaStorageDir = new File("/storage/emulated/0/ImgExp/Coloured/");
+        File mediaStorageDir = new File("/storage/emulated/0/Colorizer/Coloured Images/");
 
         if (! mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
@@ -306,7 +306,4 @@ public class MainActivity extends AppCompatActivity {
         mediaFile = new File(mediaStorageDir.getPath() + File.separator + filename);
         return mediaFile;
     }
-
-
-
 }
