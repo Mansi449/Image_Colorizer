@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +29,11 @@ import android.widget.Toast;
 import com.github.developer__.BeforeAfterSlider;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
@@ -50,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     Uri uri;
     private String filename;
     ImageView selected_image;
+    Bitmap bitmap;
     BeforeAfterSlider slider;
 
     @Override
@@ -112,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             uri = data.getData();
 
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
 
                 selected_image.setImageBitmap(bitmap);
                 selected_image.setVisibility(View.VISIBLE);
@@ -158,59 +164,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void uploadImage(){
-        try {
-            String filePath;
-            if(Build.VERSION.SDK_INT>=26){
+        storeUploadImage(bitmap);
 
-                filePath = getFilePath(getApplicationContext(), uri);
-                Log.e("file name", filePath);
-                Toast.makeText(getApplicationContext(),filePath,Toast.LENGTH_LONG).show();
+        String filePath = "/storage/emulated/0/ImgExp/upload.jpg";
 
-            }else{
-                filePath=PathUtil.getPath(this,uri);
+        final File originalfile=new File(filePath);
+        RequestBody filepart=RequestBody.create(
+                MediaType.parse(Objects.requireNonNull(getContentResolver().getType(uri))),
+                originalfile
+        );
+
+        Log.e("file name", originalfile.getName());
+        MultipartBody.Part file=MultipartBody.Part.createFormData("photo",originalfile.getName(), filepart);
+
+        String baseUrl="http://ec2-52-71-24-249.compute-1.amazonaws.com/";
+        Retrofit retrofit= new Retrofit.Builder().baseUrl(baseUrl).
+                addConverterFactory(GsonConverterFactory.create()).build();
+
+        ApiInterface apiInterface=retrofit.create(ApiInterface.class);
+
+        Call<ResponseBody> call= apiInterface.uploadImage(file);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                try {
+                    assert response.body() != null;
+                    filename= Objects.requireNonNull(response.body()).string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String black_white="http://ec2-52-71-24-249.compute-1.amazonaws.com/original/"+ filename + ".jpg";
+                String colored="http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png";
+                setSlider(black_white, colored);
+
+                Bitmap myBitmap = getBitmapfromURL(colored);
+                storeColoredImage(myBitmap);
+
+                originalfile.delete();
+
             }
 
-            assert filePath != null;
-            File originalfile=new File(filePath);
-            RequestBody filepart=RequestBody.create(
-                    MediaType.parse(Objects.requireNonNull(getContentResolver().getType(uri))),
-                    originalfile
-            );
-
-            Log.e("file name", originalfile.getName());
-            MultipartBody.Part file=MultipartBody.Part.createFormData("photo",originalfile.getName(), filepart);
-
-            String baseUrl="http://ec2-52-71-24-249.compute-1.amazonaws.com/";
-            Retrofit retrofit= new Retrofit.Builder().baseUrl(baseUrl).
-                    addConverterFactory(GsonConverterFactory.create()).build();
-
-            ApiInterface apiInterface=retrofit.create(ApiInterface.class);
-
-            Call<ResponseBody> call= apiInterface.uploadImage(file);
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                    try {
-                        assert response.body() != null;
-                        filename= Objects.requireNonNull(response.body()).string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    String black_white="http://ec2-52-71-24-249.compute-1.amazonaws.com/original/"+ filename + ".jpg";
-                    String colored="http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png";
-                    setSlider(black_white, colored);
-
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Toast.makeText(MainActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(MainActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -223,69 +221,90 @@ public class MainActivity extends AppCompatActivity {
         slider.setVisibility(View.VISIBLE);
     }
 
-    @SuppressLint("NewApi")
-    public static String getFilePath(Context context, Uri uri) throws URISyntaxException {
-        String selection = null;
-        String[] selectionArgs = null;
-        // Uri is different in versions after KITKAT (Android 4.4), we need to
-        if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(context.getApplicationContext(), uri)) {
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                return Environment.getExternalStorageDirectory() + "/" + split[1];
-            } else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
-                uri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-            } else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-                if ("image".equals(type)) {
-                    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-                selection = "_id=?";
-                selectionArgs = new String[]{
-                        split[1]
-                };
+    private void storeUploadImage(Bitmap image) {
+        File pictureFile = getOutputMediaFile();
+        Bitmap newImage = Bitmap.createScaledBitmap(image, 512, 512, false);
+        if (pictureFile == null) {
+            Log.d("Error",
+                    "Error creating media file, check storage permissions: ");// e.getMessage());
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            newImage.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.d("Error", "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d("Error", "Error accessing file: " + e.getMessage());
+        }
+    }
+
+    private  File getOutputMediaFile(){
+
+        File mediaStorageDir = new File("/storage/emulated/0/ImgExp/");
+
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                mediaStorageDir.mkdirs();
             }
         }
-        if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = {
-                    MediaStore.Images.Media.DATA
-            };
-            Cursor cursor = null;
-            try {
-                cursor = context.getContentResolver()
-                        .query(uri, projection, selection, selectionArgs, null);
-                assert cursor != null;
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                if (cursor.moveToFirst()) {
-                    return cursor.getString(column_index);
-                }
-            } catch (Exception ignored) {
-            }
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
+
+        File mediaFile;
+        String mImageName="upload.jpg" ;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        return mediaFile;
+    }
+
+    public Bitmap getBitmapfromURL(String src) {
+
+        Bitmap myBitmap;
+        try {
+            java.net.URL url = new java.net.URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    private void storeColoredImage(Bitmap image) {
+        File pictureFile = getOutputDirectory();
+        if (pictureFile == null) {
+            Log.d("Error",
+                    "Error creating media file, check storage permissions: ");// e.getMessage());
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.d("Error", "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d("Error", "Error accessing file: " + e.getMessage());
+        }
     }
 
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
+    private  File getOutputDirectory(){
 
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
+        File mediaStorageDir = new File("/storage/emulated/0/ImgExp/Coloured/");
 
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                mediaStorageDir.mkdirs();
+            }
+        }
+
+        File mediaFile;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + filename);
+        return mediaFile;
+    }
 
 }
