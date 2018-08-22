@@ -115,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
 
                 selected_image.setImageBitmap(bitmap);
+                selected_image.setVisibility(View.VISIBLE);
+                slider.setVisibility(View.GONE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
