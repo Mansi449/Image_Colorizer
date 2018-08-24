@@ -1,4 +1,9 @@
 # Image_Colorizer
+[![platform](https://img.shields.io/badge/Platform-Android-yellow.svg?style=flat-square)](https://www.android.com)
+[![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat-square)](https://android-arsenal.com/api?level=16s)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+
+## About
 This is an android app aimed at transferring colors to a black and white image or removing colors from a colorful image.
 So, try out the app and you will find that adding new life to your memorable photos is just a button click away...!
 
