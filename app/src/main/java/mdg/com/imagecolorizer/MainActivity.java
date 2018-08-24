@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         Button choose_img_from_gallery = findViewById(R.id.choose_img_from_gallery);
         Button take_a_new_image = findViewById(R.id.take_a_new_image);
         Button button_colorize = findViewById(R.id.buColorize);
+        Button  buSave = findViewById(R.id.buSave);
         selected_image = findViewById(R.id.selected_image);
 
         selected_image.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -104,6 +105,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uploadImage();
+            }
+        });
+
+        buSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    public void run() {
+
+                        Bitmap myBitmap = getBitmapfromURL("http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png");
+                        storeColoredImage(myBitmap);
+
+                    }
+                }).start();
             }
         });
 
@@ -197,8 +212,8 @@ public class MainActivity extends AppCompatActivity {
                 String colored="http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png";
                 setSlider(black_white, colored);
 
-                Bitmap myBitmap = getBitmapfromURL(colored);
-                storeColoredImage(myBitmap);
+                //Bitmap myBitmap = getBitmapfromURL(colored);
+                //storeColoredImage(myBitmap);
 
                 originalfile.delete();
 
@@ -303,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         File mediaFile;
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator + filename);
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "col_" + filename + ".png");
         return mediaFile;
     }
 
