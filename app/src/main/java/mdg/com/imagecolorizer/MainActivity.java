@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.File;
@@ -27,8 +27,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import mdg.com.slidermodule.BeforeAfterSlider;
+import mdg.com.slidermodule.asycn.ReportDownloadState;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView selected_image;
     Bitmap bitmap;
     BeforeAfterSlider slider;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         slider = findViewById(R.id.mySlider);
+        progressBar = findViewById(R.id.progBar);
         Button choose_img_from_gallery = findViewById(R.id.choose_img_from_gallery);
         Button take_a_new_image = findViewById(R.id.take_a_new_image);
         Button button_colorize = findViewById(R.id.buColorize);
@@ -96,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         button_colorize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 uploadImage();
             }
         });
@@ -205,9 +211,6 @@ public class MainActivity extends AppCompatActivity {
                 String colored="http://ec2-18-222-228-140.us-east-2.compute.amazonaws.com/colored/col_"+ filename + ".png";
                 setSlider(black_white, colored);
 
-                //Bitmap myBitmap = getBitmapfromURL(colored);
-                //storeColoredImage(myBitmap);
-
                 originalfile.delete();
 
             }
@@ -221,11 +224,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setSlider(String blackWhite, String colored){
-        Log.e("b/w", blackWhite);
-        Log.e("col", colored);
-        slider.setBeforeImage(colored).setAfterImage(blackWhite);
-        selected_image.setVisibility(View.GONE);
-        slider.setVisibility(View.VISIBLE);
+        ReportDownloadState.isDownloaded = false;
+        Log.e("in", blackWhite);
+        Log.e("in", colored);
+        slider.setBeforeImage(blackWhite).setAfterImage(colored);
+
+        final Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(ReportDownloadState.isDownloaded){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("in"," outside while");
+                            Log.e("in", Boolean.toString(ReportDownloadState.isDownloaded) + "setslider");
+                            progressBar.setVisibility(View.GONE);
+                            selected_image.setVisibility(View.GONE);
+                            slider.setVisibility(View.VISIBLE);
+                            Log.e("in", Boolean.toString(ReportDownloadState.isDownloaded) + "setsliderAF");
+                            t.cancel();
+                        }
+                    });
+                }
+            }
+        }, 100, 100);
+
     }
 
     private void storeUploadImage(Bitmap image) {

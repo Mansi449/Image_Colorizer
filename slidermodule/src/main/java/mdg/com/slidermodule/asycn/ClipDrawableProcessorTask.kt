@@ -21,7 +21,6 @@ import java.lang.ref.WeakReference
 class ClipDrawableProcessorTask<T>(imageView: ImageView, seekBar: SeekBar, private val context: Context, private val loadedFinishedListener: OnAfterImageLoaded? = null) : AsyncTask<T, Void, ClipDrawable>() {
     private val imageRef: WeakReference<ImageView>
     private val seekBarRef: WeakReference<SeekBar>
-
     init {
         this.imageRef = WeakReference(imageView)
         this.seekBarRef = WeakReference(seekBar)
@@ -83,6 +82,8 @@ class ClipDrawableProcessorTask<T>(imageView: ImageView, seekBar: SeekBar, priva
         }else {
             loadedFinishedListener?.onLoadedFinished(false)
         }
+        var obj = ReportDownloadState();
+        obj.returnTrue();
     }
 
     private fun initSeekBar(clipDrawable: ClipDrawable) {

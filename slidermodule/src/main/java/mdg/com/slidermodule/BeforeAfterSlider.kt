@@ -3,10 +3,13 @@ package mdg.com.slidermodule
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.Window
 import android.widget.RelativeLayout
 import mdg.com.slidermodule.asycn.ClipDrawableProcessorTask
 import kotlinx.android.synthetic.main.slider_layout.view.*
+import mdg.com.slidermodule.asycn.ReportDownloadState
 
 /**
  * Created by Jemo on 12/5/16.
@@ -31,6 +34,7 @@ class BeforeAfterSlider : RelativeLayout, ClipDrawableProcessorTask.OnAfterImage
             attr.recycle()
         }
     }
+
 
     init {
         LayoutInflater.from(context).inflate(R.layout.slider_layout, this)

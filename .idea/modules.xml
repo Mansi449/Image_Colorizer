@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/Image_Colorizer.iml" filepath="$PROJECT_DIR$/Image_Colorizer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/slidermodule/slidermodule.iml" filepath="$PROJECT_DIR$/slidermodule/slidermodule.iml" />
-      <module fileurl="file://$PROJECT_DIR$/slidermodule/slidermodule.iml" filepath="$PROJECT_DIR$/slidermodule/slidermodule.iml" />
     </modules>
   </component>
 </project>
