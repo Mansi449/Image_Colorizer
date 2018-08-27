@@ -1,20 +1,14 @@
 package mdg.com.imagecolorizer;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -26,15 +20,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.github.developer__.BeforeAfterSlider;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.util.Objects;
 
 import okhttp3.MediaType;
@@ -56,14 +47,12 @@ public class MainActivity extends AppCompatActivity {
     private String filename;
     ImageView selected_image;
     Bitmap bitmap;
-    BeforeAfterSlider slider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        slider = findViewById(R.id.mySlider);
         Button choose_img_from_gallery = findViewById(R.id.choose_img_from_gallery);
         Button take_a_new_image = findViewById(R.id.take_a_new_image);
         Button button_colorize = findViewById(R.id.buColorize);
@@ -137,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
 
                 selected_image.setImageBitmap(bitmap);
                 selected_image.setVisibility(View.VISIBLE);
-                slider.setVisibility(View.GONE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -210,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 String black_white="http://ec2-52-71-24-249.compute-1.amazonaws.com/original/"+ filename + ".jpg";
                 String colored="http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png";
-                setSlider(black_white, colored);
 
                 //Bitmap myBitmap = getBitmapfromURL(colored);
                 //storeColoredImage(myBitmap);
@@ -225,15 +212,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-
-    public void setSlider(String blackWhite, String colored){
-        Log.e("b/w", blackWhite);
-        Log.e("col", colored);
-        slider.setBeforeImage(colored).setAfterImage(blackWhite);
-        selected_image.setVisibility(View.GONE);
-        slider.setVisibility(View.VISIBLE);
     }
 
     private void storeUploadImage(Bitmap image) {
