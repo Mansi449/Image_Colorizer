@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -47,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private String filename;
     ImageView selected_image;
     Bitmap bitmap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,9 +197,6 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-
-                //Bitmap myBitmap = getBitmapfromURL(colored);
-                //storeColoredImage(myBitmap);
 
                 originalfile.delete();
 

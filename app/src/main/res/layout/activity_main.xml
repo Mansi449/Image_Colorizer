@@ -51,6 +51,13 @@
             app:slider_thumb="@mipmap/white_circle"
             android:visibility="gone"
         />
+    <ProgressBar
+        android:id="@+id/progBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        android:indeterminate="true"/>
 
         <LinearLayout
             android:layout_width="match_parent"
