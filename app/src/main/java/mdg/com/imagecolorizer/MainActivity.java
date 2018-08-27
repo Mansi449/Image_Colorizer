@@ -1,29 +1,36 @@
 package mdg.com.imagecolorizer;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.github.developer__.BeforeAfterSlider;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -43,12 +50,14 @@ public class MainActivity extends AppCompatActivity {
     Uri uri;
     private String filename;
     ImageView selected_image;
+    BeforeAfterSlider slider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        slider = findViewById(R.id.mySlider);
         Button choose_img_from_gallery = findViewById(R.id.choose_img_from_gallery);
         Button take_a_new_image = findViewById(R.id.take_a_new_image);
         Button button_colorize = findViewById(R.id.buColorize);
@@ -91,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 uploadImage();
             }
         });
+
     }
 
     @Override
@@ -105,14 +115,16 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
 
                 selected_image.setImageBitmap(bitmap);
-                Log.e("image ", "set");
+                selected_image.setVisibility(View.VISIBLE);
+                slider.setVisibility(View.GONE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
            // assert data != null;
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            assert data != null;
+            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             selected_image.setImageBitmap(photo);
             Log.e("image ", "captured");
         }
@@ -149,22 +161,26 @@ public class MainActivity extends AppCompatActivity {
         try {
             String filePath;
             if(Build.VERSION.SDK_INT>=26){
-                final String[] split = uri.getPath().split(":");//split the path.
-                filePath = "storage/emulated/0/"+split[0];
+
+                filePath = getFilePath(getApplicationContext(), uri);
+                Log.e("file name", filePath);
+                Toast.makeText(getApplicationContext(),filePath,Toast.LENGTH_LONG).show();
+
             }else{
                 filePath=PathUtil.getPath(this,uri);
             }
 
+            assert filePath != null;
             File originalfile=new File(filePath);
             RequestBody filepart=RequestBody.create(
-                    MediaType.parse(getContentResolver().getType(uri)),
+                    MediaType.parse(Objects.requireNonNull(getContentResolver().getType(uri))),
                     originalfile
             );
 
             Log.e("file name", originalfile.getName());
             MultipartBody.Part file=MultipartBody.Part.createFormData("photo",originalfile.getName(), filepart);
 
-            String baseUrl="http://f38722c5.ngrok.io/";
+            String baseUrl="http://ec2-52-71-24-249.compute-1.amazonaws.com/";
             Retrofit retrofit= new Retrofit.Builder().baseUrl(baseUrl).
                     addConverterFactory(GsonConverterFactory.create()).build();
 
@@ -175,18 +191,21 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     try {
-                        filename=response.body().string();
+                        assert response.body() != null;
+                        filename= Objects.requireNonNull(response.body()).string();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    String DownloadUrl="http://f38722c5.ngrok.io/colored/"+ filename;
-                    Toast.makeText(MainActivity.this,DownloadUrl,Toast.LENGTH_SHORT).show();
-                    Picasso.get().load(DownloadUrl).into(selected_image);
+
+                    String black_white="http://ec2-52-71-24-249.compute-1.amazonaws.com/original/"+ filename + ".jpg";
+                    String colored="http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png";
+                    setSlider(black_white, colored);
+
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Toast.makeText(MainActivity.this,"no"+t.getMessage(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (URISyntaxException e) {
@@ -194,5 +213,79 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
+    public void setSlider(String blackWhite, String colored){
+        Log.e("b/w", blackWhite);
+        Log.e("col", colored);
+        slider.setBeforeImage(colored).setAfterImage(blackWhite);
+        selected_image.setVisibility(View.GONE);
+        slider.setVisibility(View.VISIBLE);
+    }
+
+    @SuppressLint("NewApi")
+    public static String getFilePath(Context context, Uri uri) throws URISyntaxException {
+        String selection = null;
+        String[] selectionArgs = null;
+        // Uri is different in versions after KITKAT (Android 4.4), we need to
+        if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(context.getApplicationContext(), uri)) {
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                return Environment.getExternalStorageDirectory() + "/" + split[1];
+            } else if (isDownloadsDocument(uri)) {
+                final String id = DocumentsContract.getDocumentId(uri);
+                uri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+            } else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+                if ("image".equals(type)) {
+                    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+                selection = "_id=?";
+                selectionArgs = new String[]{
+                        split[1]
+                };
+            }
+        }
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = {
+                    MediaStore.Images.Media.DATA
+            };
+            Cursor cursor = null;
+            try {
+                cursor = context.getContentResolver()
+                        .query(uri, projection, selection, selectionArgs, null);
+                assert cursor != null;
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(column_index);
+                }
+            } catch (Exception ignored) {
+            }
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
 
 }
