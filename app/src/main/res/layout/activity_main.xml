@@ -27,6 +27,7 @@
             android:layout_weight="4"
             android:src="@drawable/img"/>
 
+
         <com.github.developer__.BeforeAfterSlider
             android:id="@+id/mySlider"
             android:layout_width="match_parent"

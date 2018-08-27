@@ -161,9 +161,11 @@ public class MainActivity extends AppCompatActivity {
         try {
             String filePath;
             if(Build.VERSION.SDK_INT>=26){
+
                 filePath = getFilePath(getApplicationContext(), uri);
                 Log.e("file name", filePath);
                 Toast.makeText(getApplicationContext(),filePath,Toast.LENGTH_LONG).show();
+
             }else{
                 filePath=PathUtil.getPath(this,uri);
             }
@@ -194,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
                     String black_white="http://ec2-52-71-24-249.compute-1.amazonaws.com/original/"+ filename + ".jpg";
                     String colored="http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png";
                     setSlider(black_white, colored);
@@ -210,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 
     public void setSlider(String blackWhite, String colored){
         Log.e("b/w", blackWhite);
@@ -282,5 +286,6 @@ public class MainActivity extends AppCompatActivity {
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
+
 
 }
