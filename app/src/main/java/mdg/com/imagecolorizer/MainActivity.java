@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e("file name", originalfile.getName());
         MultipartBody.Part file=MultipartBody.Part.createFormData("photo",originalfile.getName(), filepart);
 
-        String baseUrl="http://ec2-52-71-24-249.compute-1.amazonaws.com/";
+        String baseUrl="http://ec2-18-222-228-140.us-east-2.compute.amazonaws.com";
         Retrofit retrofit= new Retrofit.Builder().baseUrl(baseUrl).
                 addConverterFactory(GsonConverterFactory.create()).build();
 
@@ -201,8 +201,8 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                String black_white="http://ec2-52-71-24-249.compute-1.amazonaws.com/original/"+ filename + ".jpg";
-                String colored="http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png";
+                String black_white="http://ec2-18-222-228-140.us-east-2.compute.amazonaws.com/original/"+ filename + ".jpg";
+                String colored="http://ec2-18-222-228-140.us-east-2.compute.amazonaws.com/colored/col_"+ filename + ".png";
                 setSlider(black_white, colored);
 
                 //Bitmap myBitmap = getBitmapfromURL(colored);
