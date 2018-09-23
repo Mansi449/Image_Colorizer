@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Colorizer</string>
+    <string name="choose_imag">Choose image</string>
+    <string name="from_galler">FROM GALLERY</string>
+    <string name="or_color_th">or color these sample images</string>
 </resources>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="horizontal">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginLeft="-22dp">
+
+    <TextView
+        android:id="@+id/choose_imag"
+        android:layout_width="102dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/choose_imag"
+        android:textAppearance="@style/choose_imag"
+        />
+
+    <TextView
+        android:id="@+id/from_galler"
+        android:layout_width="148dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/from_galler"
+        android:textAppearance="@style/from_galler"
+        />
+
+    <TextView
+        android:id="@+id/or_color_th"
+        android:layout_width="207dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="35dp"
+        android:text="@string/or_color_th"
+        android:textAppearance="@style/or_color_th"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/b0fbb87ac_o"
+            android:layout_width="119.56dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="18dp"
+            android:background="#ff0000"
+            />
+
+        <View
+            android:id="@+id/pexels_phot"
+            android:layout_width="142.27dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="6.44dp"
+            android:layout_marginTop="18dp"
+            android:background="#00ff00"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <View
+            android:id="@+id/sample_3"
+            android:layout_width="119.56dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="18dp"
+            android:background="#ff0000"
+            />
+
+        <View
+            android:id="@+id/sample_4"
+            android:layout_width="142.27dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="6.44dp"
+            android:layout_marginTop="18dp"
+            android:background="#00ff00"
+            />
+    </LinearLayout>
+
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="44dp">
+
+        <View
+            android:id="@+id/rect_1"
+            android:layout_width="16dp"
+            android:layout_height="480dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+
+            android:background="@drawable/rect1"
+            />
+
+        <View
+            android:id="@+id/rect_2"
+            android:layout_width="16dp"
+            android:layout_height="462dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+
+            android:background="@drawable/rect2"
+            />
+
+        <View
+            android:id="@+id/rect_3"
+            android:layout_width="16dp"
+            android:layout_height="510dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/rect3"
+            />
+    </LinearLayout>
+</LinearLayout>
