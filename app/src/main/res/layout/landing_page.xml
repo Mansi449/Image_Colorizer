@@ -6,7 +6,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content" android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_marginLeft="-22dp">
+    android:layout_marginStart="-22dp">
 
     <TextView
         android:id="@+id/choose_imag"
@@ -14,12 +14,14 @@
         android:layout_height="18dp"
         android:layout_marginStart="28dp"
         android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true"
         android:text="@string/choose_imag"
         android:textAppearance="@style/choose_imag"
         />
 
     <TextView
-        android:id="@+id/from_galler"
+        android:id="@+id/choose_img_from_gallery"
         android:layout_width="148dp"
         android:layout_height="22dp"
         android:layout_marginStart="28dp"
@@ -43,7 +45,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <View
+        <ImageView
             android:id="@+id/b0fbb87ac_o"
             android:layout_width="119.56dp"
             android:layout_height="80dp"
@@ -52,7 +54,7 @@
             android:background="#ff0000"
             />
 
-        <View
+        <ImageView
             android:id="@+id/pexels_phot"
             android:layout_width="142.27dp"
             android:layout_height="80dp"
@@ -66,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <View
+        <ImageView
             android:id="@+id/sample_3"
             android:layout_width="119.56dp"
             android:layout_height="80dp"
@@ -75,7 +77,7 @@
             android:background="#ff0000"
             />
 
-        <View
+        <ImageView
             android:id="@+id/sample_4"
             android:layout_width="142.27dp"
             android:layout_height="80dp"
