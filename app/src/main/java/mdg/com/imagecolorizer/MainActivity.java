@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -73,22 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        take_a_new_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.READ_CONTACTS)
-                        != PackageManager.PERMISSION_GRANTED) {
 
-                    // Permission is not granted
-                    requestThePermission();
-                } else {
-                    // Permission has already been granted
-                    startActivity(mintent);
-                    startActivityForResult(mintent, CAMERA_REQUEST);
-                }
-            }
-        });
 
         button_colorize.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +94,68 @@ public class MainActivity extends AppCompatActivity {
                 }).start();
             }
         });
+        setContentView(R.layout.landing_page);
+
+//        slider = findViewById(R.id.mySlider);
+//        progressBar = findViewById(R.id.progBar);
+//        Button choose_img_from_gallery = findViewById(R.id.choose_img_from_gallery);
+//        Button take_a_new_image = findViewById(R.id.take_a_new_image);
+//        Button button_colorize = findViewById(R.id.buColorize);
+//        Button  buSave = findViewById(R.id.buSave);
+//        selected_image = findViewById(R.id.selected_image);
+//
+//        selected_image.setScaleType(ImageView.ScaleType.FIT_XY);
+//
+//        choose_img_from_gallery.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent();
+//                // Show only images, no videos or anything else
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                // Always show the chooser (if there are multiple options available)
+//                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+//
+//            }
+//        });
+//        take_a_new_image.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (ContextCompat.checkSelfPermission(getApplicationContext(),
+//                        Manifest.permission.READ_CONTACTS)
+//                        != PackageManager.PERMISSION_GRANTED) {
+//
+//                    // Permission is not granted
+//                    requestThePermission();
+//                } else {
+//                    // Permission has already been granted
+//                    startActivity(mintent);
+//                    startActivityForResult(mintent, CAMERA_REQUEST);
+//                }
+//            }
+//        });
+//
+//        button_colorize.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                progressBar.setVisibility(View.VISIBLE);
+//                uploadImage();
+//            }
+//        });
+//
+//        buSave.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                new Thread(new Runnable() {
+//                    public void run() {
+//
+//                        Bitmap myBitmap = getBitmapfromURL("http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png");
+//                        storeColoredImage(myBitmap);
+//
+//                    }
+//                }).start();
+//            }
+//        });
 
     }
 
