@@ -28,4 +28,9 @@
     <item name="android:textColor">#F44545</item>
     </style>
 
+    <style name="save">
+    <item name="android:textSize">18sp</item>
+    <item name="android:textColor">#FFFFFF</item>
+    </style>
+
 </resources>
