@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".BeforeColorizeActivity"/>
+        <activity android:name=".AfterColorizeActivity"/>
     </application>
 
 </manifest>

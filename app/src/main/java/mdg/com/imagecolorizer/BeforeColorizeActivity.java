@@ -1,5 +1,6 @@
 package mdg.com.imagecolorizer;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,7 +10,9 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -31,6 +34,15 @@ public class BeforeColorizeActivity extends AppCompatActivity {
 
         Uri uri = getIntent().getParcelableExtra("b/w_image");
         setBlackWhiteImage(uri);
+
+        Button buColorize = findViewById(R.id.colorize);
+        buColorize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(BeforeColorizeActivity.this, AfterColorizeActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     void setBlackWhiteImage(Uri uri){
