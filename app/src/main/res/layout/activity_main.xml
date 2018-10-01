@@ -8,18 +8,30 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:text="Sample Image: "
-            android:padding="10dp"
-            android:layout_weight="1"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:text="Sample Image: "
+                android:textColor="#000000"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/buSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save" />
+        </LinearLayout>
 
 
-        <ImageView
+    <ImageView
             android:contentDescription="@string/app_name"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -28,13 +40,20 @@
             android:src="@drawable/img"/>
 
 
-        <com.github.developer__.BeforeAfterSlider
+        <mdg.com.slidermodule.BeforeAfterSlider
             android:id="@+id/mySlider"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             app:slider_thumb="@mipmap/white_circle"
             android:visibility="gone"
         />
+    <ProgressBar
+        android:id="@+id/progBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        android:indeterminate="true"/>
 
         <LinearLayout
             android:layout_width="match_parent"
