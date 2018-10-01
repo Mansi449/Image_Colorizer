@@ -11,13 +11,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -57,18 +57,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.landing_page);
 
-        slider = findViewById(R.id.mySlider);
-        progressBar = findViewById(R.id.progBar);
-        Button choose_img_from_gallery = findViewById(R.id.choose_img_from_gallery);
-        Button take_a_new_image = findViewById(R.id.take_a_new_image);
-        Button button_colorize = findViewById(R.id.buColorize);
-        Button  buSave = findViewById(R.id.buSave);
-        selected_image = findViewById(R.id.selected_image);
-
-        selected_image.setScaleType(ImageView.ScaleType.FIT_XY);
-
+//        slider = findViewById(R.id.mySlider);
+//        progressBar = findViewById(R.id.progBar);
+          TextView choose_img_from_gallery = findViewById(R.id.choose_img_from_gallery);
+//        Button take_a_new_image = findViewById(R.id.take_a_new_image);
+//        Button button_colorize = findViewById(R.id.buColorize);
+//        Button  buSave = findViewById(R.id.buSave);
+//        selected_image = findViewById(R.id.selected_image);
+//
+//        selected_image.setScaleType(ImageView.ScaleType.FIT_XY);
+//
         choose_img_from_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,44 +81,44 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        take_a_new_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.READ_CONTACTS)
-                        != PackageManager.PERMISSION_GRANTED) {
-
-                    // Permission is not granted
-                    requestThePermission();
-                } else {
-                    // Permission has already been granted
-                    startActivity(mintent);
-                    startActivityForResult(mintent, CAMERA_REQUEST);
-                }
-            }
-        });
-
-        button_colorize.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                uploadImage();
-            }
-        });
-
-        buSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new Thread(new Runnable() {
-                    public void run() {
-
-                        Bitmap myBitmap = getBitmapfromURL("http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png");
-                        storeColoredImage(myBitmap);
-
-                    }
-                }).start();
-            }
-        });
+//        take_a_new_image.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (ContextCompat.checkSelfPermission(getApplicationContext(),
+//                        Manifest.permission.READ_CONTACTS)
+//                        != PackageManager.PERMISSION_GRANTED) {
+//
+//                    // Permission is not granted
+//                    requestThePermission();
+//                } else {
+//                    // Permission has already been granted
+//                    startActivity(mintent);
+//                    startActivityForResult(mintent, CAMERA_REQUEST);
+//                }
+//            }
+//        });
+//
+//        button_colorize.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                progressBar.setVisibility(View.VISIBLE);
+//                uploadImage();
+//            }
+//        });
+//
+//        buSave.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                new Thread(new Runnable() {
+//                    public void run() {
+//
+//                        Bitmap myBitmap = getBitmapfromURL("http://ec2-52-71-24-249.compute-1.amazonaws.com/colored/col_"+ filename + ".png");
+//                        storeColoredImage(myBitmap);
+//
+//                    }
+//                }).start();
+//            }
+//        });
 
     }
 
@@ -129,23 +129,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             uri = data.getData();
-
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-
-                selected_image.setImageBitmap(bitmap);
-                selected_image.setVisibility(View.VISIBLE);
-                slider.setVisibility(View.GONE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-           // assert data != null;
-            assert data != null;
-            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
-            selected_image.setImageBitmap(photo);
-            Log.e("image ", "captured");
+            Intent i = new Intent(MainActivity.this, BeforeColorizeActivity.class);
+            i.putExtra("b/w_image", uri);
+            startActivity(i);
         }
     }
 
@@ -176,52 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 MY_PERMISSIONS_REQUEST_CAMERA);
     }
 
-    public void uploadImage(){
 
-        storeUploadImage(bitmap);
-
-        String filePath = "/storage/emulated/0/Colorizer/upload.jpg";
-
-        final File originalfile=new File(filePath);
-        RequestBody filepart=RequestBody.create(
-                MediaType.parse(Objects.requireNonNull(getContentResolver().getType(uri))),
-                originalfile
-        );
-
-        Log.e("file name", originalfile.getName());
-        MultipartBody.Part file=MultipartBody.Part.createFormData("photo",originalfile.getName(), filepart);
-
-        String baseUrl="http://ec2-18-222-228-140.us-east-2.compute.amazonaws.com";
-        Retrofit retrofit= new Retrofit.Builder().baseUrl(baseUrl).
-                addConverterFactory(GsonConverterFactory.create()).build();
-
-        ApiInterface apiInterface=retrofit.create(ApiInterface.class);
-
-        Call<ResponseBody> call= apiInterface.uploadImage(file);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    assert response.body() != null;
-                    filename= Objects.requireNonNull(response.body()).string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                String black_white="http://ec2-18-222-228-140.us-east-2.compute.amazonaws.com/original/"+ filename + ".jpg";
-                String colored="http://ec2-18-222-228-140.us-east-2.compute.amazonaws.com/colored/col_"+ filename + ".png";
-                setSlider(black_white, colored);
-
-                originalfile.delete();
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(MainActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
 
     public void setSlider(String blackWhite, String colored){
         ReportDownloadState.isDownloaded = false;
