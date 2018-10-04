@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -9,8 +9,15 @@
     </style>
 
     <style name="choose_imag">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">#520C0C0C</item>
+
+        <item name="android:textSize">
+            16sp
+        </item>
+
+        <item name="android:textColor">
+            #FFFFFF
+        </item>
+
     </style>
 
     <style name="from_galler">
@@ -33,4 +40,26 @@
     <item name="android:textColor">#FFFFFF</item>
     </style>
 
+    <style name="colorizer">
+
+        <item name="android:textSize">
+            20sp
+        </item>
+
+        <item name="android:textColor">
+            #F44545
+        </item>
+
+    </style>
+    <style name="choose_a_bl">
+
+        <item name="android:textSize">
+            12sp
+        </item>
+
+        <item name="android:textColor">
+            #707070
+        </item>
+
+    </style>
 </resources>
