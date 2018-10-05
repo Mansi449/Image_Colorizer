@@ -14,4 +14,9 @@ Colorizer
 
 Choose a black &amp; white image from your device to get started
 </string>
+
+    <string name="sample_imag">
+
+Sample Images
+</string>
 </resources>

@@ -36,7 +36,7 @@
         android:layout_marginLeft="105dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="96dp"
-        android:background="@drawable/img"
+        android:background="@drawable/illustration"
         />
 
     <TextView
@@ -66,5 +66,8 @@
         android:text="@string/choose_imag"
         android:textAlignment="center"
         android:textAppearance="@style/choose_imag"
+        android:layout_marginBottom="10dp"
         />
+
+    <include layout="@layout/bottom_sheet" />
 </android.support.design.widget.CoordinatorLayout>
