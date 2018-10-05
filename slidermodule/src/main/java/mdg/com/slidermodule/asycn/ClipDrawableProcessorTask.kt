@@ -82,8 +82,8 @@ class ClipDrawableProcessorTask<T>(imageView: ImageView, seekBar: SeekBar, priva
         }else {
             loadedFinishedListener?.onLoadedFinished(false)
         }
-        var obj = ReportDownloadState();
-        obj.returnTrue();
+        var obj = ReportDownloadState()
+        obj.returnTrue()
     }
 
     private fun initSeekBar(clipDrawable: ClipDrawable) {

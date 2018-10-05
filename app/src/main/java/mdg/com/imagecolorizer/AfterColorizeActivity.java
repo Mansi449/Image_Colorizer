@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,6 +27,7 @@ public class AfterColorizeActivity extends AppCompatActivity{
 
         String filename;
         BeforeAfterSlider slider;
+        ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +36,9 @@ public class AfterColorizeActivity extends AppCompatActivity{
 
         Button buSave = findViewById(R.id.save);
         slider = findViewById(R.id.mySlider);
+        progressBar = findViewById(R.id.mprogressbar);
+        progressBar.setVisibility(View.VISIBLE);
+
         setSliderParams();
         setSliderImages();
 
@@ -108,9 +113,9 @@ public class AfterColorizeActivity extends AppCompatActivity{
         Point size = new Point();
         display. getSize(size);
         int width = size. x;
-        int height = size. y;
+        int height = getIntent().getExtras().getInt("Height");
         ViewGroup.LayoutParams lp = slider.getLayoutParams();
-        lp.height = height/2 ;
+        lp.height = height ;
         lp.width = width-60;
         slider.setLayoutParams(lp);
     }
@@ -123,6 +128,7 @@ public class AfterColorizeActivity extends AppCompatActivity{
         Log.e("blw", blw_url);
         Log.e("col", col_url);
 
-        slider.setBeforeImage(blw_url).setAfterImage(col_url);
+        slider.setBeforeImage(col_url).setAfterImage(blw_url);
+        progressBar.setVisibility(View.GONE);
     }
 }

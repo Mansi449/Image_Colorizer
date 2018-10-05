@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ public class BeforeColorizeActivity extends AppCompatActivity {
     Uri uri;
     boolean isBig;
     int sliderHeight;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class BeforeColorizeActivity extends AppCompatActivity {
 
         blw_image = findViewById(R.id.blw_image);
         background = findViewById(R.id.background);
+        progressBar = findViewById(R.id.beforeProgressBar);
 
         Intent intent = getIntent();
         uri = getIntent().getParcelableExtra("b/w_image");
@@ -65,6 +68,7 @@ public class BeforeColorizeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uploadImage();
+                progressBar.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -139,10 +143,13 @@ public class BeforeColorizeActivity extends AppCompatActivity {
 
                 originalfile.delete();
 
+                progressBar.setVisibility(View.GONE);
+
                 Intent i = new Intent(BeforeColorizeActivity.this, AfterColorizeActivity.class);
                 i.putExtra("blw_url", black_white);
                 i.putExtra("col_url", colored);
                 i.putExtra("filename", filename);
+                i.putExtra("Height", sliderHeight);
                 startActivity(i);
 
             }
