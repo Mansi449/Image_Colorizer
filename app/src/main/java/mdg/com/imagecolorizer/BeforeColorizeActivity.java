@@ -179,4 +179,6 @@ public class BeforeColorizeActivity extends AppCompatActivity {
         mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
         return mediaFile;
     }
+
+
 }

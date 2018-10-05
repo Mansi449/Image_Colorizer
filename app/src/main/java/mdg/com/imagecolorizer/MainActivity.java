@@ -1,13 +1,12 @@
 package mdg.com.imagecolorizer;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,9 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.ByteArrayOutputStream;
+
+public class MainActivity extends AppCompatActivity  implements View.OnClickListener  {
 
     private int PICK_IMAGE_REQUEST = 1;
     private static final int CAMERA_REQUEST = 1888;
@@ -27,6 +27,17 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout layoutBottomSheet;
     BottomSheetBehavior sheetBehavior;
     View arrow;
+    ImageView s1;
+    ImageView s2;
+    ImageView s3;
+    ImageView s4;
+    ImageView s5;
+    ImageView s6;
+    ImageView s7;
+    ImageView s8;
+    ImageView s9;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +48,26 @@ public class MainActivity extends AppCompatActivity {
         layoutBottomSheet = findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         arrow = findViewById(R.id.vector);
+
+        s1 = findViewById(R.id.s1);
+        s2 = findViewById(R.id.s2);
+        s3 = findViewById(R.id.s3);
+        s4 = findViewById(R.id.s4);
+        s5 = findViewById(R.id.s5);
+        s6 = findViewById(R.id.s6);
+        s7 = findViewById(R.id.s7);
+        s8 = findViewById(R.id.s8);
+        s9 = findViewById(R.id.s9);
+
+        s1.setOnClickListener(this);
+        s2.setOnClickListener(this);
+        s3.setOnClickListener(this);
+        s4.setOnClickListener(this);
+        s5.setOnClickListener(this);
+        s6.setOnClickListener(this);
+        s7.setOnClickListener(this);
+        s8.setOnClickListener(this);
+        s9.setOnClickListener(this);
 
         choose_img_from_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     @Override
@@ -120,10 +150,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void requestThePermission () {
-        int MY_PERMISSIONS_REQUEST_CAMERA = 2;
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.CAMERA},
-                MY_PERMISSIONS_REQUEST_CAMERA);
+    @Override
+    public void onClick(View v) {
+
+        /*
+        * TODO: line163 (bitmap.compress) gives null pointer exception i.e. 'bitmap' is null...find a way to get bitmap of an image from image view.
+        *
+        * */
+        v.buildDrawingCache(true);
+        Bitmap bitmap = v.getDrawingCache();
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitmap, "Title", null);
+        Uri uri = Uri.parse(path);
+
+        Intent i = new Intent(MainActivity.this, BeforeColorizeActivity.class);
+        i.putExtra("b/w_image", uri);
+        startActivity(i);
     }
+
 }
