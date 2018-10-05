@@ -1,5 +1,7 @@
 package mdg.com.imagecolorizer;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -7,7 +9,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +28,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
     private int PICK_IMAGE_REQUEST = 1;
     private static final int CAMERA_REQUEST = 1888;
+    private PermissionUtil permissionUtil;
     Intent mintent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     Uri uri;
     ImageView selected_image;
@@ -37,18 +44,21 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     ImageView s7;
     ImageView s8;
     ImageView s9;
+    private static final int REQUEST_STORAGE = 225;
+    private static final int TXT_STORAGE = 2;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.landing_page);
+
         TextView choose_img_from_gallery = findViewById(R.id.choose_img_from_gallery);
         layoutBottomSheet = findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         arrow = findViewById(R.id.vector);
+        permissionUtil = new PermissionUtil(this);
 
         s1 = findViewById(R.id.s1);
         s2 = findViewById(R.id.s2);
@@ -73,12 +83,33 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         choose_img_from_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                // Show only images, no videos or anything else
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                // Always show the chooser (if there are multiple options available)
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+
+                if (CheckPermission(TXT_STORAGE) != PackageManager.PERMISSION_GRANTED){
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                        showPermissionExplanation(TXT_STORAGE);
+                    }
+                    else if (!permissionUtil.checkPermissionPreference("storage")){
+                        requestPermission(TXT_STORAGE);
+                        permissionUtil.updatePermissionPreference("storage");
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "Please Allow Storage Permission in your App Setting.", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getApplicationContext().getPackageName(),null);
+                        intent.setData(uri);
+                        getApplicationContext().startActivity(intent);
+                    }
+                }else {
+
+                    Intent intent = new Intent();
+                    // Show only images, no videos or anything else
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    // Always show the chooser (if there are multiple options available)
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                }
 
             }
         });
@@ -131,24 +162,56 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult (int requestCode,
-                                            @NonNull String permissions[], @NonNull int[] grantResults){
-        switch (requestCode) {
-            case 2: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    startActivity(mintent);
-                    startActivityForResult(mintent, CAMERA_REQUEST);
-                } else {
-                    // permission denied
-                    Toast.makeText(getApplicationContext(), "Please grant camera permissions", Toast.LENGTH_SHORT).show();
-                }
-            }
+    private int CheckPermission(int permission){
+
+        int status = PackageManager.PERMISSION_DENIED;
+
+        switch (permission){
+            case TXT_STORAGE:
+                status = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                break;
         }
+
+        return status;
+    }
+
+    private void requestPermission(int permission){
+
+        switch (permission){
+            case TXT_STORAGE:
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
+                break;
+        }
+    }
+
+    private void showPermissionExplanation(final int permission){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        if(permission == TXT_STORAGE){
+            builder.setMessage("This App needs Storage Permission..Please Allow");
+            builder.setTitle("Storage Permission Needed");
+        }
+
+        builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (permission == TXT_STORAGE)
+                    requestPermission(TXT_STORAGE);
+            }
+        });
+
+        builder.setNegativeButton("Deny", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     @Override
