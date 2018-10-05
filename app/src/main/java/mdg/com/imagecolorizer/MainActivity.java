@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +26,10 @@ import android.widget.Toast;
 import android.support.design.widget.BottomSheetBehavior;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener  {
 
@@ -35,6 +42,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     LinearLayout layoutBottomSheet;
     BottomSheetBehavior sheetBehavior;
     View arrow;
+    private static final int REQUEST_STORAGE = 225;
+    private static final int TXT_STORAGE = 2;
+    private int displayBitmapSize;
+    private boolean isBig=false;
+    int uploadHeight;
     ImageView s1;
     ImageView s2;
     ImageView s3;
@@ -44,8 +56,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     ImageView s7;
     ImageView s8;
     ImageView s9;
-    private static final int REQUEST_STORAGE = 225;
-    private static final int TXT_STORAGE = 2;
+
 
 
 
@@ -156,9 +167,19 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
             uri = data.getData();
 
-            Intent i = new Intent(MainActivity.this, BeforeColorizeActivity.class);
-            i.putExtra("b/w_image", uri);
-            startActivity(i);
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                storeImage(bitmap);
+
+                Intent i = new Intent(MainActivity.this, BeforeColorizeActivity.class);
+                i.putExtra("b/w_image", uri);
+                i.putExtra("Big",isBig);
+                i.putExtra("Height",uploadHeight);
+                startActivity(i);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -250,10 +271,90 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitmap, "Title", null);
         Uri uri = Uri.parse(path);
+        storeImage(bitmap);
 
         Intent i = new Intent(MainActivity.this, BeforeColorizeActivity.class);
         i.putExtra("b/w_image", uri);
+        i.putExtra("Big",isBig);
+        i.putExtra("Height",uploadHeight);
         startActivity(i);
+    }
+
+    private void storeImage(Bitmap image) {
+        File pictureFile = getOutputMediaFile();
+        Bitmap newImage = getResizedBitmap(image);
+        uploadHeight = newImage.getHeight();
+        if (pictureFile == null) {
+            Log.d("Error",
+                    "Error creating media file, check storage permissions: ");// e.getMessage());
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            newImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.d("Error", "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d("Error", "Error accessing file: " + e.getMessage());
+        }
+
+        if( displayBitmapSize > 300 ) {
+            File pictureDir = new File("/storage/emulated/0/Colorizer/");
+            isBig=true;
+
+            String mImageName="upload.jpg" ;
+            File mediaFile = new File(pictureDir.getPath() + File.separator + mImageName);
+            Bitmap newBitmap = Bitmap.createScaledBitmap(newImage, newImage.getWidth()/2, newImage.getHeight()/2, false);
+            try {
+                FileOutputStream fos = new FileOutputStream(mediaFile);
+                newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.close();
+            } catch (FileNotFoundException e) {
+                Log.d("Error", "File not found: " + e.getMessage());
+            } catch (IOException e) {
+                Log.d("Error", "Error accessing file: " + e.getMessage());
+            }
+
+        }
+    }
+
+    private  File getOutputMediaFile(){
+
+        File mediaStorageDir = new File("/storage/emulated/0/Colorizer/");
+
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                mediaStorageDir.mkdirs();
+            }
+        }
+
+        File mediaFile;
+        String mImageName="display.jpg" ;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        return mediaFile;
+    }
+
+    public Bitmap getResizedBitmap(Bitmap bitmap){
+
+        int originalWidth = bitmap.getWidth();
+        int originalHeight = bitmap.getHeight();
+        float aspectRatio = originalWidth / (float) originalHeight;
+        Display display = getWindowManager(). getDefaultDisplay();
+        Point size = new Point();
+        display. getSize(size);
+        int newWidth = size. x-60;
+        int newHeight = Math.round(newWidth / aspectRatio);
+
+        if(newHeight>0) {
+            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
+            displayBitmapSize=bitmap.getAllocationByteCount()/1024;
+            Log.e("Size", String.valueOf(displayBitmapSize));
+            return newBitmap;
+        }
+        else{
+            return bitmap;
+        }
     }
 
 }

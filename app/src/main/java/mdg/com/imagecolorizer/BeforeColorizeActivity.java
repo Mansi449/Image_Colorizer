@@ -43,6 +43,8 @@ public class BeforeColorizeActivity extends AppCompatActivity {
     private String filename;
     Bitmap bitmap;
     Uri uri;
+    boolean isBig;
+    int sliderHeight;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,7 +54,10 @@ public class BeforeColorizeActivity extends AppCompatActivity {
         blw_image = findViewById(R.id.blw_image);
         background = findViewById(R.id.background);
 
+        Intent intent = getIntent();
         uri = getIntent().getParcelableExtra("b/w_image");
+        isBig = Objects.requireNonNull(intent.getExtras()).getBoolean("Big");
+        sliderHeight = intent.getExtras().getInt("Height");
         setBlackWhiteImage(uri);
 
         Button buColorize = findViewById(R.id.colorize);
@@ -79,7 +84,6 @@ public class BeforeColorizeActivity extends AppCompatActivity {
             Point size = new Point();
             display. getSize(size);
             int width = size. x-60;
-            int height = size. y;
             ViewGroup.LayoutParams lp = blw_image.getLayoutParams();
             lp.height = (int) (width*aspectRatio);
             lp.width = width;
@@ -95,9 +99,13 @@ public class BeforeColorizeActivity extends AppCompatActivity {
 
     public void uploadImage(){
 
-        storeUploadImage(bitmap);
-
-        String filePath = "/storage/emulated/0/Colorizer/upload.jpg";
+        String filePath;
+        if (isBig){
+            filePath = "/storage/emulated/0/Colorizer/upload.jpg";
+        }
+        else{
+            filePath = "/storage/emulated/0/Colorizer/display.jpg";
+        }
 
         final File originalfile=new File(filePath);
         RequestBody filepart=RequestBody.create(
@@ -145,42 +153,6 @@ public class BeforeColorizeActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-
-    private void storeUploadImage(Bitmap image) {
-        File pictureFile = getOutputMediaFile();
-        Bitmap newImage = Bitmap.createScaledBitmap(image, 512, 512, false);
-        if (pictureFile == null) {
-            Log.d("Error",
-                    "Error creating media file, check storage permissions: ");// e.getMessage());
-            return;
-        }
-        try {
-            FileOutputStream fos = new FileOutputStream(pictureFile);
-            newImage.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-            fos.close();
-        } catch (FileNotFoundException e) {
-            Log.d("Error", "File not found: " + e.getMessage());
-        } catch (IOException e) {
-            Log.d("Error", "Error accessing file: " + e.getMessage());
-        }
-    }
-
-    private  File getOutputMediaFile(){
-
-        File mediaStorageDir = new File("/storage/emulated/0/Colorizer/");
-
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-                mediaStorageDir.mkdirs();
-            }
-        }
-
-        File mediaFile;
-        String mImageName="upload.jpg" ;
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
-        return mediaFile;
     }
 
 
