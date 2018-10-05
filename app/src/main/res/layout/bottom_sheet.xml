@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -42,7 +43,7 @@
             android:layout_height="100dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:src="@drawable/bw1" />
+            android:src="@drawable/lion" />
 
         <ImageView
             android:id="@+id/s2"
@@ -51,7 +52,7 @@
             android:layout_height="100dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:src="@drawable/bw2" />
+            android:src="@drawable/dog1" />
 
         <ImageView
             android:id="@+id/s3"
@@ -60,7 +61,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_weight="1"
-            android:src="@drawable/bw3" />
+            android:src="@drawable/dog2" />
 
     </LinearLayout>
 
@@ -75,7 +76,7 @@
             android:layout_height="100dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:src="@drawable/bw4" />
+            android:src="@drawable/river" />
 
         <ImageView
             android:id="@+id/s5"
@@ -83,7 +84,7 @@
             android:layout_height="100dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:src="@drawable/bw5" />
+            android:src="@drawable/flower" />
 
         <ImageView
             android:id="@+id/s6"
@@ -91,7 +92,7 @@
             android:layout_height="100dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:src="@drawable/bw3" />
+            android:src="@drawable/man" />
 
     </LinearLayout>
 
@@ -106,7 +107,7 @@
             android:layout_height="100dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:src="@drawable/bw1" />
+            android:src="@drawable/fence" />
 
         <ImageView
             android:id="@+id/s8"
@@ -114,7 +115,7 @@
             android:layout_height="100dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:src="@drawable/bw2" />
+            android:src="@drawable/boat"/>
 
         <ImageView
             android:id="@+id/s9"
@@ -123,7 +124,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_weight="1"
-            android:src="@drawable/bw3" />
+            android:src="@drawable/girl_building" />
 
     </LinearLayout>
 

@@ -151,6 +151,7 @@ public class BeforeColorizeActivity extends AppCompatActivity {
                 i.putExtra("filename", filename);
                 i.putExtra("Height", sliderHeight);
                 startActivity(i);
+                finish();
 
             }
 
