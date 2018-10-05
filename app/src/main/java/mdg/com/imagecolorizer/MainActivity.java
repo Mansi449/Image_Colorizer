@@ -3,6 +3,7 @@ package mdg.com.imagecolorizer;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -153,12 +154,35 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     @Override
     public void onClick(View v) {
 
-        /*
-        * TODO: line163 (bitmap.compress) gives null pointer exception i.e. 'bitmap' is null...find a way to get bitmap of an image from image view.
-        *
-        * */
-        v.buildDrawingCache(true);
-        Bitmap bitmap = v.getDrawingCache();
+        Bitmap bitmap = null;
+        if (v==s1){
+            BitmapDrawable drawable = (BitmapDrawable) s1.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s2){
+            BitmapDrawable drawable = (BitmapDrawable) s2.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s3){
+            BitmapDrawable drawable = (BitmapDrawable) s3.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s4){
+            BitmapDrawable drawable = (BitmapDrawable) s4.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s5){
+            BitmapDrawable drawable = (BitmapDrawable) s5.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s6){
+            BitmapDrawable drawable = (BitmapDrawable) s6.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s7){
+            BitmapDrawable drawable = (BitmapDrawable) s7.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s8){
+            BitmapDrawable drawable = (BitmapDrawable) s8.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s9){
+            BitmapDrawable drawable = (BitmapDrawable) s9.getDrawable();
+            bitmap = drawable.getBitmap();
+        }
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitmap, "Title", null);
