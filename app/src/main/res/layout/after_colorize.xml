@@ -12,7 +12,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_centerInParent="true"
-        app:slider_thumb="@mipmap/white_circle"
         />
 
     <ProgressBar
