@@ -67,6 +67,9 @@ public class BeforeColorizeActivity extends AppCompatActivity {
     void setBlackWhiteImage(Uri uri){
         try {
             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            float bitmapHeight = bitmap.getHeight();
+            float bitmapWidth = bitmap.getWidth();
+            float aspectRatio = bitmapHeight/bitmapWidth;
 
             Bitmap blurred = BlurBuilder.blur(this,bitmap);
             BitmapDrawable bd = new BitmapDrawable(getResources(),blurred);
@@ -75,11 +78,11 @@ public class BeforeColorizeActivity extends AppCompatActivity {
             Display display = getWindowManager(). getDefaultDisplay();
             Point size = new Point();
             display. getSize(size);
-            int width = size. x;
+            int width = size. x-60;
             int height = size. y;
             ViewGroup.LayoutParams lp = blw_image.getLayoutParams();
-            lp.height = height/2 ;
-            lp.width = width-60;
+            lp.height = (int) (width*aspectRatio);
+            lp.width = width;
             blw_image.setLayoutParams(lp);
             blw_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
