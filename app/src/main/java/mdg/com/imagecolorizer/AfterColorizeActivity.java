@@ -1,5 +1,6 @@
 package mdg.com.imagecolorizer;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -7,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
@@ -57,6 +59,18 @@ public class AfterColorizeActivity extends AppCompatActivity{
                             @Override
                             public void run() {
                                 progressBar.setVisibility(View.GONE);
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(AfterColorizeActivity.this);
+                                builder.setMessage("Colorized Image is Saved to your device.\nFile Manager -> Colorizer -> Coloured Images -> col_"+filename+".png");
+                                builder.setTitle("Image Saved");
+                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
                             }
                         });
 

@@ -238,46 +238,68 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     @Override
     public void onClick(View v) {
 
-        Bitmap bitmap = null;
-        if (v==s1){
-            BitmapDrawable drawable = (BitmapDrawable) s1.getDrawable();
-            bitmap = drawable.getBitmap();
-        }else if (v==s2){
-            BitmapDrawable drawable = (BitmapDrawable) s2.getDrawable();
-            bitmap = drawable.getBitmap();
-        }else if (v==s3){
-            BitmapDrawable drawable = (BitmapDrawable) s3.getDrawable();
-            bitmap = drawable.getBitmap();
-        }else if (v==s4){
-            BitmapDrawable drawable = (BitmapDrawable) s4.getDrawable();
-            bitmap = drawable.getBitmap();
-        }else if (v==s5){
-            BitmapDrawable drawable = (BitmapDrawable) s5.getDrawable();
-            bitmap = drawable.getBitmap();
-        }else if (v==s6){
-            BitmapDrawable drawable = (BitmapDrawable) s6.getDrawable();
-            bitmap = drawable.getBitmap();
-        }else if (v==s7){
-            BitmapDrawable drawable = (BitmapDrawable) s7.getDrawable();
-            bitmap = drawable.getBitmap();
-        }else if (v==s8){
-            BitmapDrawable drawable = (BitmapDrawable) s8.getDrawable();
-            bitmap = drawable.getBitmap();
-        }else if (v==s9){
-            BitmapDrawable drawable = (BitmapDrawable) s9.getDrawable();
-            bitmap = drawable.getBitmap();
-        }
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitmap, "Title", null);
-        Uri uri = Uri.parse(path);
-        storeImage(bitmap);
+        if (CheckPermission(TXT_STORAGE) != PackageManager.PERMISSION_GRANTED){
 
-        Intent i = new Intent(MainActivity.this, BeforeColorizeActivity.class);
-        i.putExtra("b/w_image", uri);
-        i.putExtra("Big",isBig);
-        i.putExtra("Height",uploadHeight);
-        startActivity(i);
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                showPermissionExplanation(TXT_STORAGE);
+            }
+            else if (!permissionUtil.checkPermissionPreference("storage")){
+                requestPermission(TXT_STORAGE);
+                permissionUtil.updatePermissionPreference("storage");
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "Please Allow Storage Permission in your App Setting.", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getApplicationContext().getPackageName(),null);
+                intent.setData(uri);
+                getApplicationContext().startActivity(intent);
+            }
+        }else {
+
+            Bitmap bitmap = null;
+            if (v==s1){
+                BitmapDrawable drawable = (BitmapDrawable) s1.getDrawable();
+                bitmap = drawable.getBitmap();
+            }else if (v==s2){
+                BitmapDrawable drawable = (BitmapDrawable) s2.getDrawable();
+                bitmap = drawable.getBitmap();
+            }else if (v==s3){
+                BitmapDrawable drawable = (BitmapDrawable) s3.getDrawable();
+                bitmap = drawable.getBitmap();
+            }else if (v==s4){
+                BitmapDrawable drawable = (BitmapDrawable) s4.getDrawable();
+                bitmap = drawable.getBitmap();
+            }else if (v==s5){
+                BitmapDrawable drawable = (BitmapDrawable) s5.getDrawable();
+                bitmap = drawable.getBitmap();
+            }else if (v==s6){
+                BitmapDrawable drawable = (BitmapDrawable) s6.getDrawable();
+                bitmap = drawable.getBitmap();
+            }else if (v==s7){
+                BitmapDrawable drawable = (BitmapDrawable) s7.getDrawable();
+                bitmap = drawable.getBitmap();
+            }else if (v==s8){
+                BitmapDrawable drawable = (BitmapDrawable) s8.getDrawable();
+                bitmap = drawable.getBitmap();
+            }else if (v==s9){
+                BitmapDrawable drawable = (BitmapDrawable) s9.getDrawable();
+                bitmap = drawable.getBitmap();
+            }
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            assert bitmap != null;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitmap, "Title", null);
+            Uri uri = Uri.parse(path);
+            storeImage(bitmap);
+
+            Intent i = new Intent(MainActivity.this, BeforeColorizeActivity.class);
+            i.putExtra("b/w_image", uri);
+            i.putExtra("Big",isBig);
+            i.putExtra("Height",uploadHeight);
+            startActivity(i);
+
+        }
     }
 
     private void storeImage(Bitmap image) {
