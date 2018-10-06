@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.landing_page);
 
-        TextView choose_img_from_gallery = findViewById(R.id.choose_img_from_gallery);
+        final TextView choose_img_from_gallery = findViewById(R.id.choose_img_from_gallery);
         layoutBottomSheet = findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         arrow = findViewById(R.id.vector);
@@ -113,13 +113,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                         getApplicationContext().startActivity(intent);
                     }
                 }else {
-
-                    Intent intent = new Intent();
-                    // Show only images, no videos or anything else
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    // Always show the chooser (if there are multiple options available)
-                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                    chooseImagefromGallery();
                 }
 
             }
@@ -157,6 +151,15 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             }
         });
 
+    }
+
+    private void chooseImagefromGallery(){
+        Intent intent = new Intent();
+        // Show only images, no videos or anything else
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        // Always show the chooser (if there are multiple options available)
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
     @Override
@@ -211,7 +214,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         if(permission == TXT_STORAGE){
-            builder.setMessage("This App needs Storage Permission..Please Allow");
+            builder.setMessage("Please Allow");
             builder.setTitle("Storage Permission Needed");
         }
 
@@ -256,50 +259,52 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 getApplicationContext().startActivity(intent);
             }
         }else {
-
-            Bitmap bitmap = null;
-            if (v==s1){
-                BitmapDrawable drawable = (BitmapDrawable) s1.getDrawable();
-                bitmap = drawable.getBitmap();
-            }else if (v==s2){
-                BitmapDrawable drawable = (BitmapDrawable) s2.getDrawable();
-                bitmap = drawable.getBitmap();
-            }else if (v==s3){
-                BitmapDrawable drawable = (BitmapDrawable) s3.getDrawable();
-                bitmap = drawable.getBitmap();
-            }else if (v==s4){
-                BitmapDrawable drawable = (BitmapDrawable) s4.getDrawable();
-                bitmap = drawable.getBitmap();
-            }else if (v==s5){
-                BitmapDrawable drawable = (BitmapDrawable) s5.getDrawable();
-                bitmap = drawable.getBitmap();
-            }else if (v==s6){
-                BitmapDrawable drawable = (BitmapDrawable) s6.getDrawable();
-                bitmap = drawable.getBitmap();
-            }else if (v==s7){
-                BitmapDrawable drawable = (BitmapDrawable) s7.getDrawable();
-                bitmap = drawable.getBitmap();
-            }else if (v==s8){
-                BitmapDrawable drawable = (BitmapDrawable) s8.getDrawable();
-                bitmap = drawable.getBitmap();
-            }else if (v==s9){
-                BitmapDrawable drawable = (BitmapDrawable) s9.getDrawable();
-                bitmap = drawable.getBitmap();
-            }
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            assert bitmap != null;
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitmap, "Title", null);
-            Uri uri = Uri.parse(path);
-            storeImage(bitmap);
-
-            Intent i = new Intent(MainActivity.this, BeforeColorizeActivity.class);
-            i.putExtra("b/w_image", uri);
-            i.putExtra("Big",isBig);
-            i.putExtra("Height",uploadHeight);
-            startActivity(i);
-
+            sampleImageChoose(v);
         }
+    }
+
+    private void sampleImageChoose(View v){
+        Bitmap bitmap = null;
+        if (v==s1){
+            BitmapDrawable drawable = (BitmapDrawable) s1.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s2){
+            BitmapDrawable drawable = (BitmapDrawable) s2.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s3){
+            BitmapDrawable drawable = (BitmapDrawable) s3.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s4){
+            BitmapDrawable drawable = (BitmapDrawable) s4.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s5){
+            BitmapDrawable drawable = (BitmapDrawable) s5.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s6){
+            BitmapDrawable drawable = (BitmapDrawable) s6.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s7){
+            BitmapDrawable drawable = (BitmapDrawable) s7.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s8){
+            BitmapDrawable drawable = (BitmapDrawable) s8.getDrawable();
+            bitmap = drawable.getBitmap();
+        }else if (v==s9){
+            BitmapDrawable drawable = (BitmapDrawable) s9.getDrawable();
+            bitmap = drawable.getBitmap();
+        }
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        assert bitmap != null;
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitmap, "Title", null);
+        Uri uri = Uri.parse(path);
+        storeImage(bitmap);
+
+        Intent i = new Intent(MainActivity.this, BeforeColorizeActivity.class);
+        i.putExtra("b/w_image", uri);
+        i.putExtra("Big",isBig);
+        i.putExtra("Height",uploadHeight);
+        startActivity(i);
     }
 
     private void storeImage(Bitmap image) {

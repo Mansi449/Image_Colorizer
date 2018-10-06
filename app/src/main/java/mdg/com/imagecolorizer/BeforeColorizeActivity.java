@@ -39,8 +39,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BeforeColorizeActivity extends AppCompatActivity {
 
-    ImageView blw_image;
-    RelativeLayout background;
+    ImageView blw_image,blur_back;
     private String filename;
     Bitmap bitmap;
     Uri uri;
@@ -54,7 +53,7 @@ public class BeforeColorizeActivity extends AppCompatActivity {
         setContentView(R.layout.before_colorize);
 
         blw_image = findViewById(R.id.blw_image);
-        background = findViewById(R.id.background);
+        blur_back = findViewById(R.id.blur);
         progressBar = findViewById(R.id.beforeProgressBar);
 
         Intent intent = getIntent();
@@ -82,7 +81,7 @@ public class BeforeColorizeActivity extends AppCompatActivity {
 
             Bitmap blurred = BlurBuilder.blur(this,bitmap);
             BitmapDrawable bd = new BitmapDrawable(getResources(),blurred);
-            background.setBackground(bd);
+            blur_back.setImageDrawable(bd);
 
             Display display = getWindowManager(). getDefaultDisplay();
             Point size = new Point();
@@ -157,6 +156,7 @@ public class BeforeColorizeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(BeforeColorizeActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });

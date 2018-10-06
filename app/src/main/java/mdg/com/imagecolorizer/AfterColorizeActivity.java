@@ -4,9 +4,12 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +36,8 @@ public class AfterColorizeActivity extends AppCompatActivity{
         BeforeAfterSlider slider;
         ProgressBar progressBar;
         Handler handler= new Handler();
+        Bitmap colouredBitmap;
+        ImageView colourBlur;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +46,7 @@ public class AfterColorizeActivity extends AppCompatActivity{
 
         Button buSave = findViewById(R.id.save);
         slider = findViewById(R.id.mySlider);
+        colourBlur = findViewById(R.id.colouredBlur);
         progressBar = findViewById(R.id.mprogressbar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -152,6 +158,38 @@ public class AfterColorizeActivity extends AppCompatActivity{
         Log.e("col", col_url);
 
         slider.setBeforeImage(col_url).setAfterImage(blw_url);
-        progressBar.setVisibility(View.GONE);
+        new Thread(new Runnable() {
+            public void run() {
+                final Bitmap myBitmap = getBitmapfromURL("http://ec2-18-222-228-140.us-east-2.compute.amazonaws.com/colored/col_"+ filename + ".png");
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        colouredBitmap = myBitmap;
+                        progressBar.setVisibility(View.GONE);
+                        slider.setVisibility(View.VISIBLE);
+                        Bitmap blurredBitmap = blur(colouredBitmap);
+                        colourBlur.setImageBitmap(blurredBitmap);
+                    }
+                });
+
+            }
+        }).start();
     }
+
+    private static final float BLUR_RADIUS = 12f;
+    public Bitmap blur(Bitmap image) {
+        if (null == image) return null;
+        Bitmap outputBitmap = Bitmap.createBitmap(image);
+        final RenderScript renderScript = RenderScript.create(this);
+        Allocation tmpIn = Allocation.createFromBitmap(renderScript, image);
+        Allocation tmpOut = Allocation.createFromBitmap(renderScript, outputBitmap);
+        //Intrinsic Gausian blur filter
+        ScriptIntrinsicBlur theIntrinsic = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
+        theIntrinsic.setRadius(BLUR_RADIUS);
+        theIntrinsic.setInput(tmpIn);
+        theIntrinsic.forEach(tmpOut);
+        tmpOut.copyTo(outputBitmap);
+        return outputBitmap;
+    }
+
 }
