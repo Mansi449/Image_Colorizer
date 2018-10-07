@@ -1,8 +1,24 @@
 <resources>
     <string name="app_name">Colorizer</string>
-    <string name="choose_imag">Choose image</string>
+    <string name="choose_imag">+\u0020\u0020\u0020\u0020Choose image</string>
     <string name="from_galler">FROM GALLERY</string>
     <string name="or_color_th">or color these sample images</string>
     <string name="colorize">Colorize</string>
     <string name="save">Save</string>
+    <string name="permission_preference">Permission Preference</string>
+    <string name="permission_storage">Permission Storage</string>
+    <!-- strings.xml -->
+    <string name="colorizer">
+
+Colorizer
+</string>
+    <string name="choose_a_bl">
+
+Choose a black &amp; white image from your device to get started
+</string>
+
+    <string name="sample_imag">
+
+Sample Images
+</string>
 </resources>

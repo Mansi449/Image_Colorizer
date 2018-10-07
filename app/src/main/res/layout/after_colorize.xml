@@ -5,15 +5,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/background">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/colouredBlur"
+        android:scaleType="centerCrop"/>
+
     <mdg.com.slidermodule.BeforeAfterSlider
         android:id="@+id/mySlider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:visibility="gone"
         android:layout_centerInParent="true"
-        app:slider_thumb="@mipmap/white_circle"
         />
+
+    <ProgressBar
+        android:id="@+id/mprogressbar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:background="@drawable/rectangle"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_centerInParent="true" />
 
     <Button
         android:id="@+id/save"
