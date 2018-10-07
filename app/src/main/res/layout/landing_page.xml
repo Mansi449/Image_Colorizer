@@ -11,8 +11,8 @@
         android:layout_height="23.08dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="16.44dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/logo" />
 
     <TextView
@@ -21,8 +21,8 @@
         android:layout_height="25dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="46dp"
         android:text="@string/colorizer"
         android:textAppearance="@style/colorizer"
         />
@@ -31,8 +31,7 @@
         android:id="@+id/illustratio"
         android:layout_width="150dp"
         android:layout_height="149dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="105dp"
+        android:layout_gravity="center_horizontal"
         android:layout_alignParentTop="true"
         android:layout_marginTop="96dp"
         android:background="@drawable/illustration"
