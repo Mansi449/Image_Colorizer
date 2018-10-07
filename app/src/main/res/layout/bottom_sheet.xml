@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:behavior_hideable="true"
     app:behavior_peekHeight="130dp"
@@ -25,10 +25,11 @@
         android:id="@+id/sample_imag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:text="@string/sample_imag"
+        android:textStyle="bold"
         android:textAppearance="@style/sample_imag"
         />
 
@@ -39,29 +40,25 @@
 
         <ImageView
             android:id="@+id/s1"
-            android:layout_width="0dp"
+            android:layout_width="125dp"
             android:layout_height="100dp"
             android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:src="@drawable/lion" />
+            />
 
         <ImageView
             android:id="@+id/s2"
 
-            android:layout_width="0dp"
+            android:layout_width="125dp"
             android:layout_height="100dp"
             android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:src="@drawable/dog1" />
+            />
 
         <ImageView
             android:id="@+id/s3"
-            android:layout_width="0dp"
+            android:layout_width="125dp"
             android:layout_height="100dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:src="@drawable/dog2" />
+            android:layout_margin="5dp"
+            />
 
     </LinearLayout>
 
@@ -72,27 +69,24 @@
 
         <ImageView
             android:id="@+id/s4"
-            android:layout_width="0dp"
+            android:layout_width="125dp"
             android:layout_height="100dp"
             android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:src="@drawable/river" />
+            />
 
         <ImageView
             android:id="@+id/s5"
-            android:layout_width="0dp"
+            android:layout_width="125dp"
             android:layout_height="100dp"
             android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:src="@drawable/flower" />
+            />
 
         <ImageView
             android:id="@+id/s6"
-            android:layout_width="0dp"
+            android:layout_width="125dp"
             android:layout_height="100dp"
             android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:src="@drawable/man" />
+            />
 
     </LinearLayout>
 
@@ -103,28 +97,23 @@
 
         <ImageView
             android:id="@+id/s7"
-            android:layout_width="0dp"
+            android:layout_width="125dp"
             android:layout_height="100dp"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:src="@drawable/fence" />
+            android:layout_margin="5dp"/>
 
         <ImageView
             android:id="@+id/s8"
-            android:layout_width="0dp"
+            android:layout_width="125dp"
             android:layout_height="100dp"
             android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:src="@drawable/boat"/>
+            />
 
         <ImageView
             android:id="@+id/s9"
-            android:layout_width="0dp"
+            android:layout_width="125dp"
             android:layout_height="100dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:src="@drawable/girl_building" />
+            android:layout_margin="5dp"
+            />
 
     </LinearLayout>
 

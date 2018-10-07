@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.design.widget.BottomSheetBehavior;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,9 +59,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     ImageView s8;
     ImageView s9;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +79,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         s7 = findViewById(R.id.s7);
         s8 = findViewById(R.id.s8);
         s9 = findViewById(R.id.s9);
+
+        loadSampleImages();
 
         s1.setOnClickListener(this);
         s2.setOnClickListener(this);
@@ -382,6 +383,22 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         else{
             return bitmap;
         }
+    }
+
+    private void loadSampleImages(){
+        Picasso.get().load(R.drawable.dog1).fit().centerCrop().error(R.drawable.dog1).into(s1);
+        Picasso.get().load(R.drawable.river).fit().centerCrop().error(R.drawable.dog1).into(s2);
+        Picasso.get().load(R.drawable.lion).fit().centerCrop().into(s3);
+        Picasso.get().load(R.drawable.flower).fit().centerCrop().into(s5);
+        Picasso.get().load(R.drawable.man).fit().centerCrop().into(s6);
+        Picasso.get().load(R.drawable.girl_building).fit().centerCrop().error(R.drawable.dog1).into(s7);
+        Picasso.get().load(R.drawable.fence).fit().centerCrop().error(R.drawable.dog1).into(s8);
+        Picasso.get().load(R.drawable.boat).fit().centerCrop().error(R.drawable.dog1).into(s9);
+        Picasso.get().load(R.drawable.dog2).fit().centerCrop().error(R.drawable.dog1).into(s4);
+    }
+
+    private void setSampleImageWidth(){
+
     }
 
 }
