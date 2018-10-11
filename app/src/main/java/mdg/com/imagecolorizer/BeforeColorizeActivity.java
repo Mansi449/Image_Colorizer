@@ -1,6 +1,7 @@
 package mdg.com.imagecolorizer;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -51,6 +52,7 @@ public class BeforeColorizeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.before_colorize);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         blw_image = findViewById(R.id.blw_image);
         blur_back = findViewById(R.id.blur);

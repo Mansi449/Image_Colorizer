@@ -2,6 +2,7 @@ package mdg.com.imagecolorizer;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -45,6 +46,7 @@ public class AfterColorizeActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.after_colorize);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Button buSave = findViewById(R.id.save);
         slider = findViewById(R.id.mySlider);
@@ -74,7 +76,7 @@ public class AfterColorizeActivity extends AppCompatActivity{
                 File f = new File(filePath);
                 if (!f.exists()){
                     AlertDialog.Builder builder = new AlertDialog.Builder(AfterColorizeActivity.this);
-                    builder.setMessage("First save the image to device. \n Do you want to save the image?");
+                    builder.setMessage("First save the image to device.\nDo you want to save the image?");
                     builder.setTitle("Image Does Not Exist On Device");
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
