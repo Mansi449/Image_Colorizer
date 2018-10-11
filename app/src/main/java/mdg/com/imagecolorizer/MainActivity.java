@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 i.putExtra("Big",isBig);
                 i.putExtra("Height",uploadHeight);
                 startActivity(i);
+                finish();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -306,6 +307,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         i.putExtra("Big",isBig);
         i.putExtra("Height",uploadHeight);
         startActivity(i);
+        finish();
     }
 
     private void storeImage(Bitmap image) {
