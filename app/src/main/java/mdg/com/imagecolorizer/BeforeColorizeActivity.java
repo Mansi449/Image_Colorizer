@@ -1,6 +1,7 @@
 package mdg.com.imagecolorizer;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -39,7 +40,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BeforeColorizeActivity extends AppCompatActivity {
 
-    ImageView blw_image,blur_back;
+    ImageView blw_image,blur_back,back;
     private String filename;
     Bitmap bitmap;
     Uri uri;
@@ -51,10 +52,12 @@ public class BeforeColorizeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.before_colorize);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         blw_image = findViewById(R.id.blw_image);
         blur_back = findViewById(R.id.blur);
         progressBar = findViewById(R.id.beforeProgressBar);
+        back = findViewById(R.id.ivBack);
 
         Intent intent = getIntent();
         uri = getIntent().getParcelableExtra("b/w_image");
@@ -68,6 +71,15 @@ public class BeforeColorizeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 uploadImage();
                 progressBar.setVisibility(View.VISIBLE);
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(BeforeColorizeActivity.this , MainActivity.class);
+                startActivity(i);
+                finish();
             }
         });
     }
