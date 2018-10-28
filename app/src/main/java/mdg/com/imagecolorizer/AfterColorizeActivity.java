@@ -69,6 +69,7 @@ public class AfterColorizeActivity extends AppCompatActivity{
             }
         });
 
+
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,6 +162,14 @@ public class AfterColorizeActivity extends AppCompatActivity{
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(AfterColorizeActivity.this , MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
     public Bitmap getBitmapfromURL(String src) {
 
         Bitmap myBitmap;
@@ -233,6 +242,7 @@ public class AfterColorizeActivity extends AppCompatActivity{
         Log.e("col", col_url);
 
         slider.setBeforeImage(col_url).setAfterImage(blw_url);
+        slider.setVisibility(View.INVISIBLE);
         new Thread(new Runnable() {
             public void run() {
                 final Bitmap myBitmap = getBitmapfromURL("http://ec2-18-222-228-140.us-east-2.compute.amazonaws.com/colored/col_"+ filename + ".png");
@@ -240,8 +250,13 @@ public class AfterColorizeActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         colouredBitmap = myBitmap;
-                        progressBar.setVisibility(View.GONE);
-                        slider.setVisibility(View.VISIBLE);
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                                slider.setVisibility(View.VISIBLE);
+                            }
+                        }, 3000);
                         Bitmap blurredBitmap = blur(myBitmap);
                         colourBlur.setImageBitmap(blurredBitmap);
                     }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -37,11 +38,8 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener  {
 
     private int PICK_IMAGE_REQUEST = 1;
-    private static final int CAMERA_REQUEST = 1888;
     private PermissionUtil permissionUtil;
-    Intent mintent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     Uri uri;
-    ImageView selected_image;
     LinearLayout layoutBottomSheet;
     BottomSheetBehavior sheetBehavior;
     View arrow;
@@ -50,15 +48,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     private int displayBitmapSize;
     private boolean isBig=false;
     int uploadHeight;
-    ImageView s1;
-    ImageView s2;
-    ImageView s3;
-    ImageView s4;
-    ImageView s5;
-    ImageView s6;
-    ImageView s7;
-    ImageView s8;
-    ImageView s9;
+    ImageView s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12;
+    int permissionFlag=0;
+    View sampleImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +73,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         s7 = findViewById(R.id.s7);
         s8 = findViewById(R.id.s8);
         s9 = findViewById(R.id.s9);
+        s10 = findViewById(R.id.s10);
+        s11 = findViewById(R.id.s11);
+        s12 = findViewById(R.id.s12);
 
         loadSampleImages();
 
@@ -93,10 +88,15 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         s7.setOnClickListener(this);
         s8.setOnClickListener(this);
         s9.setOnClickListener(this);
+        s10.setOnClickListener(this);
+        s11.setOnClickListener(this);
+        s12.setOnClickListener(this);
 
         choose_img_from_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                permissionFlag=1;
 
                 if (CheckPermission(TXT_STORAGE) != PackageManager.PERMISSION_GRANTED){
 
@@ -243,7 +243,22 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_STORAGE && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+            if (permissionFlag == 1){
+                chooseImagefromGallery();
+            }else if (permissionFlag == 2){
+                sampleImageChoose(sampleImageView);
+            }
+        }
+    }
+
+    @Override
     public void onClick(View v) {
+
+        permissionFlag = 2;
+        sampleImageView = v;
 
         if (CheckPermission(TXT_STORAGE) != PackageManager.PERMISSION_GRANTED){
 
@@ -270,33 +285,31 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     private void sampleImageChoose(View v){
         Bitmap bitmap = null;
         if (v==s1){
-            BitmapDrawable drawable = (BitmapDrawable) s1.getDrawable();
-            bitmap = drawable.getBitmap();
+            bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.image1);
         }else if (v==s2){
-            BitmapDrawable drawable = (BitmapDrawable) s2.getDrawable();
-            bitmap = drawable.getBitmap();
+            bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.image2);
         }else if (v==s3){
-            BitmapDrawable drawable = (BitmapDrawable) s3.getDrawable();
-            bitmap = drawable.getBitmap();
+            bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.image3);
         }else if (v==s4){
-            BitmapDrawable drawable = (BitmapDrawable) s4.getDrawable();
-            bitmap = drawable.getBitmap();
+            bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.image4);
         }else if (v==s5){
-            BitmapDrawable drawable = (BitmapDrawable) s5.getDrawable();
-            bitmap = drawable.getBitmap();
+            bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.image5);
         }else if (v==s6){
-            BitmapDrawable drawable = (BitmapDrawable) s6.getDrawable();
-            bitmap = drawable.getBitmap();
+            bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.image6);
         }else if (v==s7){
-            BitmapDrawable drawable = (BitmapDrawable) s7.getDrawable();
-            bitmap = drawable.getBitmap();
+            bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.image7);
         }else if (v==s8){
-            BitmapDrawable drawable = (BitmapDrawable) s8.getDrawable();
-            bitmap = drawable.getBitmap();
+            bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.image8);
         }else if (v==s9){
-            BitmapDrawable drawable = (BitmapDrawable) s9.getDrawable();
-            bitmap = drawable.getBitmap();
+            bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.image9);
+        }else if (v==s10){
+            bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.image10);
+        }else if (v==s11){
+            bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.image11);
+        }else if (v==s12){
+            bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.image12);
         }
+
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         assert bitmap != null;
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -390,19 +403,18 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     }
 
     private void loadSampleImages(){
-        Picasso.get().load(R.drawable.dog1).fit().centerCrop().error(R.drawable.dog1).into(s1);
-        Picasso.get().load(R.drawable.river).fit().centerCrop().error(R.drawable.dog1).into(s2);
-        Picasso.get().load(R.drawable.lion).fit().centerCrop().into(s3);
-        Picasso.get().load(R.drawable.flower).fit().centerCrop().into(s5);
-        Picasso.get().load(R.drawable.man).fit().centerCrop().into(s6);
-        Picasso.get().load(R.drawable.girl_building).fit().centerCrop().error(R.drawable.dog1).into(s7);
-        Picasso.get().load(R.drawable.fence).fit().centerCrop().error(R.drawable.dog1).into(s8);
-        Picasso.get().load(R.drawable.boat).fit().centerCrop().error(R.drawable.dog1).into(s9);
-        Picasso.get().load(R.drawable.dog2).fit().centerCrop().error(R.drawable.dog1).into(s4);
-    }
-
-    private void setSampleImageWidth(){
-
+        Picasso.get().load(R.drawable.image1).fit().centerCrop().error(R.drawable.image1).into(s1);
+        Picasso.get().load(R.drawable.image2).fit().centerCrop().error(R.drawable.image2).into(s2);
+        Picasso.get().load(R.drawable.image3).fit().centerCrop().into(s3);
+        Picasso.get().load(R.drawable.image4).fit().centerCrop().into(s4);
+        Picasso.get().load(R.drawable.image5).fit().centerCrop().into(s5);
+        Picasso.get().load(R.drawable.image6).fit().centerCrop().error(R.drawable.image6).into(s6);
+        Picasso.get().load(R.drawable.image7).fit().centerCrop().error(R.drawable.image7).into(s7);
+        Picasso.get().load(R.drawable.image8).fit().centerCrop().error(R.drawable.image8).into(s8);
+        Picasso.get().load(R.drawable.image9).fit().centerCrop().error(R.drawable.image9).into(s9);
+        Picasso.get().load(R.drawable.image10).fit().centerCrop().error(R.drawable.image7).into(s10);
+        Picasso.get().load(R.drawable.image11).fit().centerCrop().error(R.drawable.image8).into(s11);
+        Picasso.get().load(R.drawable.image12).fit().centerCrop().error(R.drawable.image9).into(s12);
     }
 
 }

@@ -84,6 +84,13 @@ public class BeforeColorizeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(BeforeColorizeActivity.this , MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
     void setBlackWhiteImage(Uri uri){
         try {
             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
