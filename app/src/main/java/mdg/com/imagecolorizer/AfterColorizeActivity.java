@@ -1,8 +1,10 @@
 package mdg.com.imagecolorizer;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -16,13 +18,17 @@ import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -59,15 +65,31 @@ public class AfterColorizeActivity extends AppCompatActivity{
         setSliderParams();
         setSliderImages();
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        float width = size.x;
+        int wid = (int) convertPixelsToDp(width,this);
+
+        int imagePixel = (int) convertDpToPixel(24,this);
+        int marginTop = (int) convertDpToPixel(16,this);
+        int marginStart = (int) convertDpToPixel(wid-80,this);
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(imagePixel , imagePixel);
+        lp.setMargins(0, marginTop, 0, 0);
+        lp.setMarginEnd(marginTop);
+        lp.setMarginStart(marginStart);
+        share.setLayoutParams(lp);
+
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(AfterColorizeActivity.this , MainActivity.class);
                 startActivity(i);
                 finish();
-
             }
         });
+
 
         share.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +183,14 @@ public class AfterColorizeActivity extends AppCompatActivity{
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(AfterColorizeActivity.this , MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
     public Bitmap getBitmapfromURL(String src) {
 
         Bitmap myBitmap;
@@ -233,6 +263,7 @@ public class AfterColorizeActivity extends AppCompatActivity{
         Log.e("col", col_url);
 
         slider.setBeforeImage(col_url).setAfterImage(blw_url);
+        slider.setVisibility(View.INVISIBLE);
         new Thread(new Runnable() {
             public void run() {
                 final Bitmap myBitmap = getBitmapfromURL("http://ec2-18-222-228-140.us-east-2.compute.amazonaws.com/colored/col_"+ filename + ".png");
@@ -240,8 +271,13 @@ public class AfterColorizeActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         colouredBitmap = myBitmap;
-                        progressBar.setVisibility(View.GONE);
-                        slider.setVisibility(View.VISIBLE);
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                                slider.setVisibility(View.VISIBLE);
+                            }
+                        }, 3000);
                         Bitmap blurredBitmap = blur(myBitmap);
                         colourBlur.setImageBitmap(blurredBitmap);
                     }
@@ -265,6 +301,17 @@ public class AfterColorizeActivity extends AppCompatActivity{
         theIntrinsic.forEach(tmpOut);
         tmpOut.copyTo(outputBitmap);
         return outputBitmap;
+    }
+
+    public static float convertPixelsToDp(float px, Context context){
+        return px / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
+    public static float convertDpToPixel(int dp, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
     }
 
 }
