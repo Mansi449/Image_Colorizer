@@ -384,16 +384,23 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
         int originalWidth = bitmap.getWidth();
         int originalHeight = bitmap.getHeight();
-        float aspectRatio = originalWidth / (float) originalHeight;
+        int newHeight, newWidth;
+        float aspectRatio = originalHeight / (float) originalWidth;
         Display display = getWindowManager(). getDefaultDisplay();
         Point size = new Point();
         display. getSize(size);
-        int newWidth = size. x-60;
-        int newHeight = Math.round(newWidth / aspectRatio);
+        newWidth = size.x - 60;
+        newHeight = Math.round(newWidth * aspectRatio);
+        if(newHeight > (size. y-380)) {
+            newHeight = size. y-400;
+            newWidth = Math.round(newHeight / aspectRatio);
+        }
+        Log.e("UploadHeight", String.valueOf(newHeight));
+        Log.e("UploadWidth", String.valueOf(newWidth));
 
         if(newHeight>0) {
             Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
-            displayBitmapSize=bitmap.getAllocationByteCount()/1024;
+            displayBitmapSize=newBitmap.getAllocationByteCount()/1024;
             Log.e("Size", String.valueOf(displayBitmapSize));
             return newBitmap;
         }

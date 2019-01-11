@@ -106,8 +106,15 @@ public class BeforeColorizeActivity extends AppCompatActivity {
             Point size = new Point();
             display. getSize(size);
             int width = size. x-60;
+            int height = (int) (width*aspectRatio);
+            if(height > (size. y-380)) {
+                height = size. y-400;
+                width = Math.round(height / aspectRatio);
+            }
+            Log.e("HeightDisplay",String.valueOf(height));
+            Log.e("WidthDisplay",String.valueOf(width));
             ViewGroup.LayoutParams lp = blw_image.getLayoutParams();
-            lp.height = (int) (width*aspectRatio);
+            lp.height = height;
             lp.width = width;
             blw_image.setLayoutParams(lp);
             blw_image.setScaleType(ImageView.ScaleType.FIT_XY);
