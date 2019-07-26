@@ -7,6 +7,8 @@
 This is an android app aimed at transferring colors to a black and white image or removing colors from a colorful image.
 So, try out the app and you will find that adding new life to your memorable photos is just a button click away...!
 
+Uses a [Caffe implementation](https://github.com/ShashKash/ColorizerNN) of the CNN inspired by a [paper](http://richzhang.github.io/colorization/) by Richard Zhang
+
 ## Project Information
 The main aim of the app is to add appropriate colors to a black and white image or to pop colors from an image which would bring new life to them.
 Color transfer between two images is one of the most hyped tasks in image processing. Fortunately, image processing and the use of deep learning has made it possible upto a satisfactory level.
